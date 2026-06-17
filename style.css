@@ -12,20 +12,31 @@ body {
 .journal-container {
   display: flex;
   width: 1688px;
-  height: 1127px;
+  height: auto; /* ← ИЗМЕНЕНО: убираем жесткие 1127px, даем высоте адаптироваться */
   max-width: 95vw;
   max-height: 95vh;
+  aspect-ratio: 1688 / 1127; /* ← ДОБАВЛЕНО: жестко держит пропорции разворота на любых экранах */
   box-shadow: 0 15px 40px rgba(0,0,0,0.2);
   position: relative;
 
-  background-color: transparent; /* ← ВАЖНО */
-  transition: width 0.4s ease-in-out, max-width 0.4s ease-in-out; 
+  background-color: transparent; 
+  /* Добавляем aspect-ratio в анимацию для плавного перехода */
+  transition: width 0.4s ease-in-out, max-width 0.4s ease-in-out, aspect-ratio 0.4s ease-in-out; 
 }
 
 /* КЛАСС ДЛЯ ЦЕНТРИРОВАНИЯ (Обложка и Последняя страница) */
 .journal-container.centered {
-  width: 844px; /* Сужаем контейнер до одной страницы */
-  max-width: 47.5vw;
+  width: 844px; 
+  max-width: 47.5vw; /* Для ПК оставляем половину экрана */
+  aspect-ratio: 844 / 1127; /* ← ДОБАВЛЕНО: пропорции ровно одной страницы */
+}
+
+@media (max-width: 768px) {
+  .journal-container.centered {
+    /* На телефонах нам не нужно, чтобы обложка сжималась до 47.5% от узкого экрана.
+       Пусть она гордо занимает нормальные 95% ширины, как и весь разворот */
+    max-width: 95vw; 
+  }
 }
 
 /* Стили страниц */
