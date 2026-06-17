@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const BASE_H = 1127;
 
   function applyScale() {
-    const scaleX = window.innerWidth * 0.9 / BASE_W;
-    const scaleY = window.innerHeight * 0.9 / BASE_H;
+    const scaleX = window.innerWidth * 0.8 / BASE_W;
+    const scaleY = window.innerHeight * 0.8 / BASE_H;
 
     const scale = Math.min(scaleX, scaleY);
 
