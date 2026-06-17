@@ -1,18 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Твой массив картинок (сейчас их 3, потом добавишь остальные до 12)
-
 
   const journal = document.querySelector(".journal-wrapper");
 
-  const scaleX = window.innerWidth * 0.8 / 1688;
-  const scaleY = window.innerHeight * 0.8 / 1127;
+  const BASE_W = 1688;
+  const BASE_H = 1127;
 
-  const scale = Math.min(scaleX, scaleY);
-  journal.style.transform = `scale(${scale})`;
+  function applyScale() {
+    const scaleX = window.innerWidth * 0.7 / BASE_W;
+    const scaleY = window.innerHeight * 0.7 / BASE_H;
+
+    const scale = Math.min(scaleX, scaleY);
+
+    journal.style.transform = `scale(${scale})`;
+    journal.style.transformOrigin = "top center";
+  }
+
+  // важно: первичный запуск
+  applyScale();
+
+  // важно: адаптация под телефон / поворот экрана
+  window.addEventListener("resize", applyScale);
+  window.addEventListener("orientationchange", applyScale);
+
+
+  // -------------------- ТВОЙ КОД --------------------
 
   const images = [
-    "pages/1.png",       // Индекс 0 (Обложка)
-    "pages/2.png", // Индекс 1
+    "pages/1.png",
+    "pages/2.png",
     "pages/3.png",
     "pages/4.png",
     "pages/5.png",
@@ -22,10 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
     "pages/9.png",
     "pages/10.png",
     "pages/11.png",
-    "pages/12.png", // Индекс 2
+    "pages/12.png",
   ];
 
-  let currentSpread = 0; 
+  let currentSpread = 0;
 
   const journalContainer = document.querySelector(".journal-container");
   const leftPage = document.getElementById("leftPage");
@@ -34,37 +49,36 @@ document.addEventListener("DOMContentLoaded", function () {
   const nextBtn = document.getElementById("nextBtn");
 
 
-  
-
   function setPageImage(pageElement, imagePath) {
     if (!imagePath) {
       pageElement.style.backgroundImage = "none";
-      pageElement.style.display = "none"; // Прячем страницу, если картинки нет
+      pageElement.style.display = "none";
       return;
     }
-    pageElement.style.display = "block"; // Показываем страницу
-    //pageElement.style.backgroundColor = "transparent";
+
+    pageElement.style.display = "block";
     pageElement.style.backgroundImage = `url('${imagePath}')`;
+    pageElement.style.backgroundSize = "cover";
+    pageElement.style.backgroundPosition = "center";
   }
 
+
   function updateJournal() {
-    // Сбрасываем центрирование по умолчанию
     journalContainer.classList.remove("centered");
 
     if (currentSpread === 0) {
-      // 1. ОБЛОЖКА: Включаем режим центрирования, прячем левую страницу, показываем только правую
       journalContainer.classList.add("centered");
       setPageImage(leftPage, null);
       setPageImage(rightPage, images[0]);
-    } 
+    }
+
     else if (currentSpread === Math.ceil((images.length - 1) / 2)) {
-      // 2. ПОСЛЕДНЯЯ СТРАНИЦА: Включаем центрирование, показываем только левую страницу
       journalContainer.classList.add("centered");
       setPageImage(leftPage, images[images.length - 1]);
       setPageImage(rightPage, null);
-    } 
+    }
+
     else {
-      // 3. РАЗВОРОТЫ: Обычный режим (две страницы рядом)
       const leftIndex = 1 + (currentSpread - 1) * 2;
       const rightIndex = leftIndex + 1;
 
@@ -73,8 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+
   nextBtn.addEventListener("click", () => {
     const maxSpread = Math.ceil((images.length - 1) / 2);
+
     if (currentSpread < maxSpread) {
       currentSpread++;
       updateJournal();
@@ -87,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
       updateJournal();
     }
   });
+
 
   updateJournal();
 });
